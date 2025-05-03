@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Graphik';
+    src: url('../fonts/GraphikRegular.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'EuclidCircularB';
+    src: url('../fonts/Euclid_Circular_B_Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+
+/* Ancho y alto de la barra de desplazamiento */
+::-webkit-scrollbar {
+    width: 10px;  /* Para el scroll vertical */
+    height: 10px; /* Para el scroll horizontal */
+}
+
+/* Fondo del scrollbar (track) */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+}
+
+/* Thumb (parte que se mueve) */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+/* Cuando pasas el mouse sobre el thumb */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Flechas del scrollbar */
+::-webkit-scrollbar-button {
+    display: none; /* Oculta las flechas */
+}
+
+#benefits-h2,#benefits__card_desc,#Expertice{
+    font-family: "Graphik", sans-serif;
+}
+
+
+#benefits-h3,#title_container_cases,#expertice_title,#EuclidCircularB,#achievementTilte,#achievements__item-title,#title_ramdom_post,#ramdom_post_title_item,
+#ramdom_post_title_item_2,#h2_prefooter,#hero__title,#cases-grid__item-tags,#title_cases-grid__item-title,#title_services__title,#services__item-title,
+#services__item-link{
+    font-family: "EuclidCircularB", sans-serif;
+}
