@@ -4,6 +4,6 @@ from .views import *
 
 
 urlpatterns = [
-    
+    path('list', ListCategoriesView.as_view())
 
 ]

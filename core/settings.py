@@ -19,13 +19,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG')
 
 # ALLOWED_HOSTS = env.list('ALLOWED_HOSTS_DEV')
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS_DEV')
+# ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS_DEV')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS_DEV', '').split(',')
+
 
 
 
 # Application definition
 
 DJANGO_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,19 +54,61 @@ INSTALLED_APPS = DJANGO_APPS + PROJECT_APP + THIRD_PARTY_APP
 
 CKEDITOR_UPLOAD_PATH = "/media/"
 CKEDITOR_CONFIGS = {
+    # 'default': {
+    #     'toolbar': 'Custom',
+    #     'toolbar_Custom': [
+    #         ['Bold', 'Italic', 'Underline'],
+    #         ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+    #         ['Link', 'Unlink'],
+    #         ['RemoveFormat', 'Source'],
+    #     ],
+    #     'height': 300,
+    #     'width': 300,
+    #     'autoParagraph': False
+    # },
     'default': {
-        'toolbar': 'Custom',
-        'toolbar_Custom': [
-            ['Bold', 'Italic', 'Underline'],
-            ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-            ['Link', 'Unlink'],
-            ['RemoveFormat', 'Source'],
-        ],
-        'height': 300,
-        'width': 300,
+        'toolbar': 'full',
         'autoParagraph': False
-    },
+    }
 }
+
+JAZZMIN_SETTINGS = {
+    # otras configuraciones opcionales...
+
+    "show_ui_builder": True,
+}
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-dark",
+    "no_navbar_border": False,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "solar",
+    "dark_mode_theme": "solar",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
