@@ -20,7 +20,7 @@ class BlogListViews(APIView):
             serilizer = PostListSerializer(result, many=True)
             
 
-            print("LIST POST")
+            
             return paginator.get_paginated_response({"post": serilizer.data})
             
         else:
@@ -28,13 +28,56 @@ class BlogListViews(APIView):
         
 class ListPostByCategory(APIView):
     permission_classes = (permissions.AllowAny,)
-    
+ 
     def get(self, request, format=None):
         if Post.objects.all().exists():
-            post = Post.objects.all().order_by('-published')
-            print("ListPostByCategory")
-            return Response({'success': 'test ListPostByCategory'}, status=status.HTTP_200_OK )
+            slug = request.query_params.get('slug')
+            category = Category.objects.get(slug=slug)
+
+            if not category.parent: # si no tiene categorias padres significa ella es la categoria padre y hay que listarla junto con sus hijas
+                categories = [category] + list(category.children.all())
+                post = Post.objects.filter(category__in = categories)
+            else:
+                post = Post.objects.filter(category=category)
+
+            paginator = SmallSetPagination()
+            result = paginator.paginate_queryset(post, request)
+            serilizer = PostListSerializer(result, many=True)
+            return paginator.get_paginated_response({"post": serilizer.data})
         else:
             return Response({'error':'No post found'}, status=status.HTTP_404_NOT_FOUND)
             
+
+class PostDetailView(APIView):
+    permission_classes = (permissions.AllowAny)
+
+    def get(self, request, slug, format=None):
+        try:
+            post = Post.objects.get(slug = slug)
+        except Post.DoesNotExist:
+            return Response({'error': 'Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # serializar el post
+
+        serializer = PostSerializer(post)
+
+        # Obtener IP del usuario
+
+        address = request.META.get('HTTP_X_FORWARDED_FOR')
+        ip = address.split(',')[-1].strip() if address else request.META.get('REMOSTE_ADDR')
+
+            # address.split(','): Devuelve una lista de strings.
+            # [-1]: Accede al último elemento de esa lista (un string).
+            # .strip(): Elimina espacios en blanco del string y devuelve el string resultante.
+
+        # Registra la vista si aun no fue contada desde esa IP
+
+        if not ViewCount.objects.filter(post = post , ip_address= ip).exists():
+            ViewCount.objects.create(post=post, ip_address=ip)
+            post.views += 1 
+            post.save()
+        
+        return Response({'post': serializer.data}, status = status.HTTP_200_OK)
+
+
         
