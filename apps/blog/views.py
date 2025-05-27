@@ -80,7 +80,7 @@ class PostDetailView(APIView):
 
 class SearchBlogView(APIView):
     def get(self, request, format=None):
-        search_term = request.query_params.get('search_term').strip()   #strip() elimina espaciois en blanco
+        search_term = request.query_params.get('s').strip()   #strip() elimina espaciois en blanco
         
         if not search_term:
             return Response({'error':'Search term not provided'}, status=status.HTTP_400_BAD_REQUEST)
