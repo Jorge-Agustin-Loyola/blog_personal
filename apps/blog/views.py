@@ -6,7 +6,7 @@ from .models import Post, ViewCount
 from apps.category.models import Category
 from .serializers import PostSerializer, PostListSerializer
 from .pagination import SmallSetPagination,LargeSetPagination,MediumSetPagination
-
+from django.db.models import Q
 
 class BlogListViews(APIView):
     permission_classes = (permissions.AllowAny,)
@@ -47,9 +47,8 @@ class ListPostByCategory(APIView):
         else:
             return Response({'error':'No post found'}, status=status.HTTP_404_NOT_FOUND)
             
-
 class PostDetailView(APIView):
-    permission_classes = (permissions.AllowAny)
+    permission_classes = (permissions.AllowAny,)
 
     def get(self, request, slug, format=None):
         try:
@@ -79,5 +78,22 @@ class PostDetailView(APIView):
         
         return Response({'post': serializer.data}, status = status.HTTP_200_OK)
 
-
+class SearchBlogView(APIView):
+    def get(self, request, format=None):
+        search_term = request.query_params.get('search_term').strip()   #strip() elimina espaciois en blanco
         
+        if not search_term:
+            return Response({'error':'Search term not provided'}, status=status.HTTP_400_BAD_REQUEST)
+
+        matches = Post.objects.filter(
+            Q(title__icontains=search_term) |
+            Q(description__icontains=search_term)|
+            Q(category__name__icontains=search_term)
+        ).distinct() #distinct() elimina post que se repiten
+
+        serializer = PostListSerializer(matches, many=True)
+
+
+        print(matches )
+        return Response({'results':serializer.data}, status=status.HTTP_200_OK)
+   
