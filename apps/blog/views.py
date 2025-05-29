@@ -12,8 +12,8 @@ class BlogListViews(APIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, format=None):
-        if Post.objects.all().exists():
-            post = Post.objects.all()
+        if Post.postobjects.all().exists():
+            post = Post.postobjects.all()
 
             paginator = SmallSetPagination()
             result = paginator.paginate_queryset(post, request)
@@ -30,15 +30,15 @@ class ListPostByCategory(APIView):
     permission_classes = (permissions.AllowAny,)
  
     def get(self, request, format=None):
-        if Post.objects.all().exists():
+        if Post.postobjects.all().exists():
             slug = request.query_params.get('slug')
             category = Category.objects.get(slug=slug)
 
             if not category.parent: # si no tiene categorias padres significa ella es la categoria padre y hay que listarla junto con sus hijas
                 categories = [category] + list(category.children.all())
-                post = Post.objects.filter(category__in = categories)
+                post = Post.postobjects.filter(category__in = categories)
             else:
-                post = Post.objects.filter(category=category)
+                post = Post.postobjects.filter(category=category)
 
             paginator = SmallSetPagination()
             result = paginator.paginate_queryset(post, request)
@@ -52,7 +52,7 @@ class PostDetailView(APIView):
 
     def get(self, request, slug, format=None):
         try:
-            post = Post.objects.get(slug = slug)
+            post = Post.postobjects.get(slug = slug)
         except Post.DoesNotExist:
             return Response({'error': 'Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
@@ -85,7 +85,7 @@ class SearchBlogView(APIView):
         if not search_term:
             return Response({'error':'Search term not provided'}, status=status.HTTP_400_BAD_REQUEST)
 
-        matches = Post.objects.filter(
+        matches = Post.postobjects.filter(
             Q(title__icontains=search_term) |
             Q(description__icontains=search_term)|
             Q(category__name__icontains=search_term)
