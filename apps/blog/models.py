@@ -22,22 +22,16 @@ class Post(models.Model):
 
     title =         models.CharField(max_length=255)
     slug =          models.SlugField(max_length=255, unique=True)
-    thumbnail =     models.ImageField(upload_to=blog_thumbnail_directory, max_length=500)
-    
+    thumbnail =     models.ImageField(upload_to=blog_thumbnail_directory, max_length=500) 
     description =   models.TextField(max_length=255)
     content =       RichTextField()
-
     time_read =     models.IntegerField()
-
     published =     models.DateTimeField(default=timezone.now)
     views =         models.IntegerField(default=0, blank=True)
-
-
     category =      models.ForeignKey(Category, on_delete=models.PROTECT)
-
     status =        models.CharField(max_length=10, choices=options, default='draft')
-    objects =           models.Manager()  # default manager
-    postobjects =       PostObjects()  # custom manager
+    objects =       models.Manager()  # default manager Devuelve todos los posts, incluso los borradores
+    postobjects =   PostObjects()  # custom manager devuelve los objetos donde sus status sea published
 
     class Meta:
         ordering = ('-published',)
